@@ -1,4 +1,4 @@
-JAX-RS Swagger2Feature Demo using WebApp with Spring
+JAX-RS OpenApiFeature Demo using WebApp with Spring
 =================
 
 The demo shows a basic usage of Swagger API documentation with multiple REST based Web Services using 
@@ -20,24 +20,24 @@ Using either UNIX or Windows:
 Two JAX-RS endpoints are available after the service has started. 
 Swagger API documents in JSON and YAML are available at
 
-  http://localhost:9000/app/swaggerSample/swagger.json
-  http://localhost:9000/app/swaggerSample/swagger.yaml
+  http://localhost:9000/app/carSample/swagger.json
+  http://localhost:9000/app/carSample/swagger.yaml
 
 and
 
-  http://localhost:9000/app/swaggerSample2/swagger.json
-  http://localhost:9000/app/swaggerSample2/swagger.yaml
+  http://localhost:9090/app/bikeSample/swagger.json
+  http://localhost:9090/app/bikeSample/swagger.yaml
 
 To view the Swagger document using Swagger-UI, use your Browser to 
 open the Swagger-UI page at
 
-  http://localhost:9000/app/swaggerSample/api-docs?url=/app/swaggerSample/swagger.json
+  http://localhost:9090/app/bikeSample/api-docs?url=/app/bikeSample/swagger.json
   or
-  http://localhost:9000/app/swaggerSample2/api-docs?url=/app/swaggerSample2/swagger.json
+  http://localhost:9090/app/carSample/api-docs?url=/app/carSample/swagger.json
 
 or go to the CXF services page:
 
-  http://localhost:9000/app/services
+  http://localhost:9090/app
 
 and follow Swagger links.
 
