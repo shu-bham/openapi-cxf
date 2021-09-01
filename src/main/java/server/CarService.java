@@ -19,53 +19,101 @@
 
 package server;
 
-
-
-import io.swagger.annotations.Api;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Path("/")
-@Api
-public class CarService {
-    private Map<String, Car> items;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
-    public CarService() {
-        items = Collections.synchronizedMap(new TreeMap<String, Car>(String.CASE_INSENSITIVE_ORDER));
-        items.put("Car 1", new Car("Car 1", "Value 1"));
-        items.put("Car 2", new Car("Car 2", "Value 2"));
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
+@Path("/sample")
+public class Sample {
+    private Map<String, Item> items;
+
+    public Sample() {
+        items = Collections.synchronizedMap(new TreeMap<String, Item>(String.CASE_INSENSITIVE_ORDER));
+        items.put("Item 1", new Item("Item 1", "Value 1"));
+        items.put("Item 2", new Item("Item 2", "Value 2"));
     }
-
 
     @Produces({ MediaType.APPLICATION_JSON })
     @GET
-    public Response getCars(
-         @QueryParam("page")  int page) {
-
+    @Operation(
+        summary = "Get all items",
+        description = "Get operation with Response and @Default value",
+        responses = {
+            @ApiResponse(
+                content = @Content(array = @ArraySchema(schema = @Schema(implementation = Item.class))),
+                responseCode = "200"
+            )
+        }
+    )
+    public Response getItems(@Parameter(required = true) @QueryParam("page") @DefaultValue("1") int page) {
         return Response.ok(items.values()).build();
     }
 
     @Produces({ MediaType.APPLICATION_JSON })
     @Path("/{name}")
     @GET
-    public Car getCar(
-         @HeaderParam("Accept-Language") final String language,
-        @PathParam("name") String name) {
-        return items.get(name);
+    @Operation(
+        summary = "Get item by name",
+        description = "Get operation with type and headers",
+        responses = {
+            @ApiResponse(content = @Content(schema = @Schema(implementation = Item.class)), responseCode = "200"),
+            @ApiResponse(responseCode = "404")
+        }
+    )
+    public Response getItem(
+            @Parameter(required = true) @HeaderParam("Accept-Language") final String language,
+            @Parameter(required = true) @PathParam("name") String name) {
+        return items.containsKey(name) 
+            ? Response.ok().entity(items.get(name)).build() 
+                : Response.status(Status.NOT_FOUND).build();
     }
 
     @Consumes({ MediaType.APPLICATION_JSON })
     @POST
-    public Response createCar(
+    @Operation(
+        summary = "Create new item",
+        description = "Post operation with entity in a body",
+        responses = {
+            @ApiResponse(
+                content = @Content(
+                    schema = @Schema(implementation = Item.class), 
+                    mediaType = MediaType.APPLICATION_JSON
+                ),
+                headers = @Header(name = "Location"),
+                responseCode = "201"
+            )
+        }
+    )
+    public Response createItem(
         @Context final UriInfo uriInfo,
-         final Car item) {
+        @Parameter(required = true) final Item item) {
         items.put(item.getName(), item);
         return Response
             .created(uriInfo.getBaseUriBuilder().path(item.getName()).build())
@@ -75,19 +123,39 @@ public class CarService {
     @Produces({ MediaType.APPLICATION_JSON })
     @Path("/{name}")
     @PUT
-    public Car updateCar(
-         @PathParam("name") String name,
-         @FormParam("value") String value) {
-        Car item = new Car(name, value);
+    @Operation(
+        summary = "Update an existing new item",
+        description = "Put operation with form parameter",
+        responses = {
+            @ApiResponse(
+                content = @Content(schema = @Schema(implementation = Item.class)),
+                responseCode = "200"
+            )
+        }
+    )
+    public Item updateItem(
+            @Parameter(required = true) @PathParam("name") String name,
+            @Parameter(required = true) @FormParam("value") String value) {
+        Item item = new Item(name, value);
         items.put(name,  item);
         return item;
     }
 
     @Path("/{name}")
     @DELETE
-
-    public Response delete( @PathParam("name") String name) {
+    @Operation(
+        summary = "Delete an existing new item",
+        description = "Delete operation with implicit header",
+        responses = @ApiResponse(responseCode = "204")
+    )
+    @Parameter(
+       name = "Accept-Language",
+       description = "language",
+       required = true,
+       schema = @Schema(implementation = String.class),
+       in = ParameterIn.HEADER
+    )
+    public void delete(@Parameter(required = true) @PathParam("name") String name) {
         items.remove(name);
-        return Response.ok().build();
     }
 }
