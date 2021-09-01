@@ -37,15 +37,13 @@
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
     <bean id="originFilter" class="server.ApiOriginFilter" />
 
-    <!-- Application resource for the first Endpoint -->
-    <bean id="carService" class="server.CarService" />
-
-<!--     Swagger2Feature for the first Endpoint -->
-    <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
-        <property name="usePathBasedConfig" value="true"/>
+    <!-- CXF OpenApiFeature -->
+    <bean id="openApiFeature" class="org.apache.cxf.jaxrs.openapi.OpenApiFeature">
+        <property name="title" value="Sample REST Application" />
+        <property name="scan" value="false" />
     </bean>
 
-    <!-- First Endpoint -->
+    <bean id="carService" class="server.CarService" />
     <jaxrs:server id="sampleServer1" address="/carSample">
         <jaxrs:serviceBeans>
             <ref bean="carService" />
@@ -55,25 +53,21 @@
             <ref bean="originFilter" />
         </jaxrs:providers>
         <jaxrs:features>
-            <ref bean="swagger2Feature" />
+            <ref bean="openApiFeature" />
         </jaxrs:features>
     </jaxrs:server>
 
-    <!-- Application resource for the second Endpoint -->
-    <bean id="bikeServiceImpl" class="server.BikeServiceImpl" />
-
-
-    <!-- Second Endpoint -->
+    <bean id="bikeService" class="server.BikeServiceImpl" />
     <jaxrs:server id="sampleServer2" address="/bikeSample">
         <jaxrs:serviceBeans>
-            <ref bean="bikeServiceImpl" />
+            <ref bean="bikeService" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider" />
             <ref bean="originFilter" />
         </jaxrs:providers>
         <jaxrs:features>
-            <ref bean="swagger2Feature" />
+            <ref bean="openApiFeature" />
         </jaxrs:features>
     </jaxrs:server>
 

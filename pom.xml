@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <cxf.swagger.ui.version>3.38.0</cxf.swagger.ui.version>
+        <cxf.swagger.ui.version>3.13.0</cxf.swagger.ui.version>
         <cxf.jetty9.version>9.4.43.v20210629</cxf.jetty9.version>
         <cxf.version>3.1.12</cxf.version>
         <springframework.version>5.1.5.RELEASE</springframework.version>
@@ -47,7 +47,12 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>swagger-ui</artifactId>
-            <version>${cxf.swagger.ui.version}</version>
+            <version>3.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-service-description-openapi-v3</artifactId>
+            <version>3.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -81,11 +86,6 @@
             <version>${cxf.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
-            <version>3.3.2</version>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>

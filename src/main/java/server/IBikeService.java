@@ -6,7 +6,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/")
+@Path("/bike")
 public interface IBikeService {
   @Produces({MediaType.APPLICATION_JSON})
   @GET
@@ -15,7 +15,7 @@ public interface IBikeService {
   @Produces({MediaType.APPLICATION_JSON})
   @Path("/{name}")
   @GET
-  Bike getBike(@HeaderParam("Accept-Language") String language, String name);
+  Response getBike(@HeaderParam("Accept-Language") String language, @PathParam("name") String name);
 
   @Consumes({MediaType.APPLICATION_JSON})
   @POST
@@ -24,7 +24,7 @@ public interface IBikeService {
   @Produces({MediaType.APPLICATION_JSON})
   @Path("/{name}")
   @PUT
-  Bike updateBike(String name, @FormParam("value") String value);
+  Bike updateBike(@PathParam("name") String name, @FormParam("value") String value);
 
   @Path("/{name}")
   @DELETE
